@@ -1,0 +1,644 @@
+<?php
+require('db.php');
+$name="";
+if (isset($_POST['name'])) {
+	echo "<div class='container'>";
+	echo "<table class='table table-bordered  table-hover mt-3'>";
+	echo "<tr>";
+	echo "<th>Gym_Id</th>";
+	echo "<th>Name</th>";
+	echo "<th>Address</th>";
+	echo "<th>Type</th>";
+	echo "<th>Update</th>";
+	echo "<th>Delete</th>";
+	echo "</tr>";
+	echo "</div>";
+	$name=$_POST['name'];
+		$que=mysqli_query($conn,"SELECT * FROM `gym` WHERE CONCAT(`gym_id`,`gym_name`,`address`,`address`,`type`) LIKE '%".$name."%'");
+		if(mysqli_num_rows($que) > 0){
+		while($row=mysqli_fetch_array($que))
+	{
+		echo "<tr>";
+		echo "<td>".$row['gym_id']."</td>";
+		echo "<td>".$row['gym_name']."</td>";
+		echo "<td>".$row['address']."</td>";
+		echo "<td>".$row['type']."</td>";
+		echo "<td><a href='home.php?id=$row[gym_id]&info=update_gym'><i class='fas fa-pencil-alt'></i></a></td>";
+		echo  "<td><a href='home.php?id=$row[gym_id]&info=delete_gym'><i class='fas fa-trash-alt'></i></a></td>";
+		echo "</tr>";
+	}
+}else{
+	echo "<div class='alert alert-warning'><b>0 result</b></div>";
+}
+}
+?>
+HOME:
+<?php
+include("auth.php");
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gym Management System</title>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+  <link rel="stylesheet" href="style.css"> 
+</head>
+<body style="background:url(gym_bg.jpg);">
+	<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+		<div class="container-fluid">
+  <a class="navbar-brand" href="home.php">GYM MANAGEMENT SYSTEM</a>
+  <a href="logout.php" class=" nav nav-link">log out</a>
+</div>
+</nav>
+<div class="row mt-3">
+  <div class="col-2">
+    <div id="accordion">
+    <div class="list-group">
+      <div class="list-group-item bg-dark">
+        <a class="collapsed nav-link text-light" data-toggle="collapse" href="#collapseTwo">
+        <i class="fas fa-user-alt"></i>  GYM</a>
+      </div>
+      <div id="collapseTwo" class="collapse" data-parent="#accordion">
+          <div class="list-group-item" style="background-color: #303030;"><a href="home.php?info=add_gym" class="text-light">ADD GYM</a>
+          </div>
+          <div class="list-group-item" style="background-color: #303030;"><a href="home.php?info=manage_gym" class="text-light">VIEW GYMS</a></div>
+        </div>
+      <div class="list-group-item bg-dark">
+        <a class="collapsed nav-link text-light" data-toggle="collapse" href="#collapseThree">
+          <i class="fas fa-user-graduate"></i>   PAYMENT DEPARTMENT
+        </a>
+      </div>
+      <div id="collapseThree" class="collapse" data-parent="#accordion">
+        <div class="list-group-item" style="background-color: #303030;">
+          <a href="home.php?info=add_payment" class="text-light">ADD PAYMENT AREA</a>
+        </div>
+        <div class="list-group-item" style="background-color: #303030;">
+          <a href="home.php?info=manage_payment" class="text-light">VIEW PAYMENT AREAS</a>
+        </div>
+      </div>
+         <div class="list-group-item bg-dark">
+        <a class="collapsed nav-link text-light" data-toggle="collapse" href="#collapsefive">
+        <i class="fas fa-book"></i>  MEMBERS</a>
+      </div>
+      <div id="collapsefive" class="collapse" data-parent="#accordion">
+          <div class="list-group-item" style="background-color: #303030;"><a href="home.php?info=add_member" class="text-light">ADD MEMBER</a></div>
+          <div class="list-group-item" style="background-color: #303030;"><a href="home.php?info=manage_member" class="text-light">VIEW MEMBERS</a></div>
+        </div>
+         <div class="list-group-item bg-dark">
+        <a class="collapsed nav-link text-light" data-toggle="collapse" href="#collapsesix">
+        <i class="fas fa-users"></i> TRAINERS</a>
+      </div>
+      <div id="collapsesix" class="collapse" data-parent="#accordion">
+          <div class="list-group-item" style="background-color: #303030;"><a href="home.php?info=add_trainer" class="text-light">ADD TRAINER</a></div>
+          <div class="list-group-item" style="background-color: #303030;"><a href="home.php?info=manage_trainer" class="text-light">VIEW TRAINERS</a></div>
+        </div>
+    </div>
+</div>
+  </div>
+  <div class="col-10">
+   
+<?php
+@$info=$_GET['info'];
+if ($info!=="") {
+             if ($info=="add_gym") {
+             include('add_gym.php');
+                }
+             else if($info=="add_payment")
+             {
+             include('add_payment.php');
+             }
+             elseif ($info=="manage_payment") {
+               include ('manage_payment.php');
+             }elseif ($info=="add_member") {
+               include ('add_member.php');
+             }elseif ($info=="manage_member") {
+               include ('manage_member.php');
+             }elseif ($info=="add_trainer") {
+               include ('add_trainer.php');
+             }elseif ($info=="manage_trainer") {
+               include ('manage_trainer.php');
+             }elseif ($info=="manage_gym") {
+               include ('manage_gym.php');
+             }elseif ($info=="update_payment") {
+               include ('update_payment.php');
+             }elseif ($info=="delete_payment") {
+               include ('delete_payment.php');
+             }elseif ($info=="update_gym") {
+               include ('update_gym.php');
+             }elseif ($info=="delete_gym") {
+               include ('delete_gym.php');
+             }elseif ($info=="update_member") {
+               include ('update_member.php');
+             }elseif ($info=="delete_member") {
+               include ('delete_member.php');
+             }elseif ($info=="update_trainer") {
+               include ('update_trainer.php');
+             }elseif ($info=="delete_trainer") {
+               include ('delete_trainer.php');
+             }elseif ($info=="change_password") {
+               include ('change_password.php');
+             }elseif ($info=="gym_search") {
+               include ('gym_search.php');
+             }elseif ($info=="member_search") {
+               include ('member_search.php');
+             }elseif ($info=="payment_search") {
+               include ('payment_search.php');
+             }elseif ($info=="trainer_search") {
+               include ('trainer_search.php');
+             }
+             }
+?>
+</div>
+</div>
+</body>
+</html>
+INDEX:
+<?php
+session_start();
+require('db.php');
+$username="";
+$errors = array(); 
+if (isset($_POST['login_user'])) {
+  $username = mysqli_real_escape_string($conn, $_POST['username']);
+  $pwd = mysqli_real_escape_string($conn, $_POST['pwd']);
+  if (count($errors) == 0) {
+    $query = "SELECT * FROM login WHERE uname='$username' AND pwd='$pwd'";
+    $results = mysqli_query($conn, $query);
+    if (mysqli_num_rows($results) == 1) {
+      $_SESSION['uname'] = $username;
+      header("location:home.php?info=add_gym");
+    }else {
+      array_push($errors, "<div class='alert alert-warning'><b>Wrong username/password combination</b></div>");
+    }
+  }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gym Management</title>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <style type="text/css">
+    .background{
+      position: fixed;
+      z-index: -1000;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      top: 0;
+      left: 0;
+    }
+	.form{
+		width:30%;
+		margin-left:35%;
+		margin-top:7%;
+	}
+		hr{
+		background-color:white;
+	}
+    .navbar{
+      background-color: transparent !important;
+    }
+  </style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+<div class="container-fluid">
+  <a class="navbar-brand" href="index.php"><h3>GYM MANAGEMENT SYSTEM</h3></a>
+ </div>
+</nav>
+<hr>
+ <h2 style="color:white; text-align:center;"> Access Only To Admin</h2>
+ <hr>
+<form class="form " action="" method="post">
+	  <input type="text" class="form-control mb-2 mr-sm-2" name="username" placeholder="USERNAME" required> <br/>
+	  <input type="password" class="form-control mb-2 mr-sm-2" name="pwd" placeholder="PASSWORD" required> <br/>
+	  <button type="submit" class="btn btn-outline-light mb-2" name="login_user">Login</button>
+</form>
+<div class="background">
+  <img src="gym_bg.jpg">
+</div>
+</body>
+</html>
+
+LOGOUT:
+<?php
+session_start();
+if (session_destroy()) {
+	header("location:index.php");
+}
+?>
+
+MANAGE GYM:
+<div class="container">
+	<form class="form-group mt-3" method="post" action="home.php?info=gym_search">
+		<h3 class="lead">SEARCH GYM</h3>
+		<input type="text" name="name" class="form-control" placeholder="ENTER GYM NAME OR GYM ID">
+	</form>
+
+	<div class="container">
+		<table class="table table-bordered table-hover">
+			<tr>
+				<th>GYM ID</th>
+				<th>GYM NAME</th>
+				<th>GYM ADDRESS</th>
+				<th>GYM TYPE</th>
+			</tr>
+			<?php
+           require('db.php');
+$all="SELECT * FROM gym";
+$all_query=mysqli_query($conn,$all);
+if (mysqli_num_rows($all_query) > 0) {
+    while($row = mysqli_fetch_assoc($all_query)) {
+       echo "<tr>";
+		echo "<td>".$row['gym_id']."</td>";
+		echo "<td>".$row['gym_name']."</td>";
+		echo "<td>".$row['address']."</td>";
+		echo "<td>".$row['type']."</td>";
+		echo "</tr><br>";
+    }
+} else {
+    echo "0 results";
+}
+?>
+		</table>
+	</div>
+</div>
+
+MANAGE MEMBER:
+<div class="container">
+	<form class="form-group mt-3" method="post" action="home.php?info=member_search">
+		<h3 class="lead">SEARCH MEMBER</h3>
+		<input type="text" name="name" class="form-control" placeholder="ENTER MEMBER NAME OR MEMBER ID">
+	</form>
+	<div class="container">
+		<table class="table table-bordered table-hover">
+			<tr>
+				<th>MEMBER ID</th>
+				<th>MEMBER NAME</th>
+				<th>AGE</th>
+				<th>DOB</th>			
+				<th>PACKAGE</th>
+				<th>MOBILE NO</th>
+				<th>PAYMENT AREA ID </th>
+				<th>TRAINER ID</th>
+			</tr>
+			<?php
+           require('db.php');
+$all="SELECT * FROM member";
+$all_query=mysqli_query($conn,$all);
+if (mysqli_num_rows($all_query) > 0) {
+    while($row = mysqli_fetch_assoc($all_query)) {
+       echo "<tr>";
+		echo "<td>".$row['mem_id']."</td>";
+		echo "<td>".$row['name']."</td>";
+		echo "<td>".$row['age']."</td>";
+		echo "<td>".$row['dob']."</td>";
+		echo "<td>".$row['package']."</td>";
+		echo "<td>".$row['mobileno']."</td>";
+		echo "<td>".$row['pay_id']."</td>";
+		echo "<td>".$row['trainer_id']."</td>";
+	   echo "</tr><br>";
+    }
+} else {
+    echo "0 results";
+}
+?>	
+		</table>
+	</div>
+</div>
+
+MANAGE TRAINER:
+<div class="container">
+	<form class="form-group mt-3" method="post" action="home.php?info=trainer_search">
+		<h3 class="lead">SEARCH TRAINER</h3>
+		<input type="text" name="name" class="form-control" placeholder="ENTER TRAINER NAME OR TRAINER ID">
+	</form>
+	<div class="container">
+		<table class="table table-bordered table-hover">
+			<tr>
+				<th>TRAINER ID</th>
+				<th>NAME</th>
+				<th>TIME</th>
+				<th>MOBILE NO</th>
+			</tr>
+			<?php
+           require('db.php');
+$all="SELECT * FROM trainer";
+$all_query=mysqli_query($conn,$all);
+if (mysqli_num_rows($all_query) > 0) {
+    while($row = mysqli_fetch_assoc($all_query)) {
+       echo "<tr>";
+			echo "<td>".$row['trainer_id']."</td>";
+		echo "<td>".$row['name']."</td>";
+		echo "<td>".$row['time']."</td>";
+		echo "<td>".$row['mobileno']."</td>";
+		echo "</tr><br>";
+    }
+} else {
+    echo "0 results";
+}?>
+		</table>
+	</div>
+</div>
+
+MANAGE PAYMENT:
+<div class="container">
+	<form class="form-group mt-3" method="post" action="home.php?info=payment_search">
+		<h3 class="lead">SEARCH PAYMENT AREA</h3>
+		<input type="text" name="id" class="form-control" placeholder="ENTER PAYMENT AREA ID">
+	</form>
+	<div class="container">
+		<table class="table table-bordered table-hover">
+			<tr>
+				<th>PAYMENT AREA ID</th>
+				<th>AMOUNT</th>
+				<th>GYM ID</th>
+			</tr>
+			<?php
+           require('db.php');
+$all="SELECT * FROM payment";
+$all_query=mysqli_query($conn,$all);
+if (mysqli_num_rows($all_query) > 0) {
+    while($row = mysqli_fetch_assoc($all_query)) {
+       echo "<tr>";
+			echo "<td>".$row['pay_id']."</td>";
+			echo "<td>".$row['amount']."</td>";
+			echo "<td>".$row['gym_id']."</td>";
+		echo "</tr><br>";
+    }
+} else {
+    echo "0 results";
+}
+?>
+		</table>
+	</div>
+</div>
+MEMBER SEARCH:
+<?php
+require('db.php');
+$name="";
+if (isset($_POST['name'])) {
+	echo "<div class='container'>";
+	echo "<table class='table table-bordered  table-hover mt-3'>";
+	echo "<tr>";
+	echo "<th>Mem_Id</th>";
+	echo "<th>Name</th>";
+	echo "<th>DOB</th>";
+	echo "<th>Age</th>";
+	echo "<th>Package</th>";
+	echo "<th>Mobile No</th>";
+	echo "<th>Update</th>";
+	echo "<th>Delete</th>";
+	echo "</tr>";
+	echo "</div>";
+	$name=$_POST['name'];
+		$que=mysqli_query($conn,"SELECT * FROM `member` WHERE CONCAT(`mem_id`,`name`,`dob`,`age`,`package`,'mobileno') LIKE '%".$name."%'");
+		if(mysqli_num_rows($que) > 0){
+	while($row=mysqli_fetch_array($que))
+	{
+		echo "<tr>";
+		echo "<td>".$row['mem_id']."</td>";
+		echo "<td>".$row['name']."</td>";
+		echo "<td>".$row['dob']."</td>";
+		echo "<td>".$row['age']."</td>";
+		echo "<td>".$row['package']."</td>";
+		echo "<td>".$row['mobileno']."</td>";
+		echo "<td><a href='home.php?id=$row[mem_id]&info=update_member'><i class='fas fa-pencil-alt'></i></a></td>";
+		echo  "<td><a href='home.php?id=$row[mem_id]&info=delete_member'><i class='fas fa-trash-alt'></i></a></td>";
+	}
+}else{
+	echo "<div class='alert alert-warning'><b>0 result</b></div>";
+}	
+}
+?>
+
+PAYMENT SEARCH:
+<?php
+require('db.php');
+$id="";
+if (isset($_POST['id'])) {
+	echo "<div class='container'>";
+	echo "<table class='table table-bordered  table-hover mt-3'>";
+	echo "<tr>";
+	echo "<th>Pay_Id</th>";
+	echo "<th>Amount</th>";
+	echo "<th>Update</th>";
+	echo "<th>Delete</th>";
+	echo "</tr>";
+	echo "</div>";
+	$id=$_POST['id'];
+		$que=mysqli_query($conn,"SELECT * FROM `payment` WHERE CONCAT(`pay_id`,`amount`) LIKE '%".$id."%'");
+		if(mysqli_num_rows($que) > 0){
+	while($row=mysqli_fetch_array($que))
+	{
+		echo "<tr>";
+		echo "<td>".$row['pay_id']."</td>";
+		echo "<td>".$row['amount']."</td>";
+		echo "<td><a href='home.php?id=$row[pay_id]&info=update_payment'><i class='fas fa-pencil-alt'></i></a></td>";
+		echo  "<td><a href='home.php?id=$row[pay_id]&info=delete_payment'><i class='fas fa-trash-alt'></i></a></td>";
+	}
+}else{
+	echo "<div class='alert alert-warning'><b>0 result</b></div>";
+}
+}
+?>
+
+TRAINER SEARCH:
+<?php
+require('db.php');
+$name="";
+if (isset($_POST['name'])) {
+	echo "<div class='container'>";
+	echo "<table class='table table-bordered  table-hover mt-3'>";
+	echo "<tr>";
+	echo "<th>Trainer_Id</th>";
+	echo "<th>Name</th>";
+	echo "<th>Time</th>";
+	echo "<th>Mobile No</th>";
+	echo "<th>Update</th>";
+	echo "<th>Delete</th>";
+	echo "</tr>";
+	echo "</div>";
+
+
+	$name=$_POST['name'];
+		$que=mysqli_query($conn,"SELECT * FROM `trainer` WHERE CONCAT(`trainer_id`,`name`,`time`,`mobileno`) LIKE '%".$name."%'");
+		if(mysqli_num_rows($que) > 0){
+	while($row=mysqli_fetch_array($que))
+	{
+		echo "<tr>";
+		echo "<td>".$row['trainer_id']."</td>";
+		echo "<td>".$row['name']."</td>";
+		echo "<td>".$row['time']."</td>";
+		echo "<td>".$row['mobileno']."</td>";
+		echo "<td><a href='home.php?id=$row[trainer_id]&info=update_trainer'><i class='fas fa-pencil-alt'></i></a></td>";
+		echo  "<td><a href='home.php?id=$row[trainer_id]&info=delete_trainer'><i class='fas fa-trash-alt'></i></a></td>";
+	}
+}else{
+	echo "<div class='alert alert-warning'><b>0 result</b></div>";
+}
+}
+?>
+STYLE.CSS:
+h3{
+	color:white;
+}
+.mt-3{
+	color:white;
+}
+
+UPDATE GYM:
+<?php
+require('db.php');
+if (isset($_REQUEST['gym'])) {
+  $gym_id = mysqli_real_escape_string($conn, $_REQUEST['id']);
+  $name = mysqli_real_escape_string($conn, $_REQUEST['name']);
+  $address = mysqli_real_escape_string($conn, $_REQUEST['address']);
+  $type = mysqli_real_escape_string($conn, $_REQUEST['type']);
+  $update_query="update gym set gym_id='$gym_id',gym_name='$name',address='$address',type='$type' where gym_id='".$_GET['id']."'";
+  $update_sql=mysqli_query($conn,$update_query);
+  $err="<div class='alert alert-success'><b>Gym Details updated</b></div>";
+}
+$con=mysqli_query($conn,"select * from gym where gym_id='".$_GET['id']."'");
+$res=mysqli_fetch_assoc($con);  
+?>
+<div class="container">
+	<form class="form-group mt-3" method="post" action="">
+		<div><h3>UPDATE GYM</h3></div>
+		 <?php  
+    echo @$err;
+    ?>
+		<label class="mt-3">GYM ID</label>
+		<input type="text" name="id" value="<?php echo @$res['gym_id'];?>" class="form-control">
+		<label class="mt-3">GYM NAME</label>
+		<input type="text" name="name" value="<?php echo @$res['gym_name'];?>" class="form-control">
+		<label class="mt-3">GYM ADDRESS</label>
+		<input type="text" name="address" value="<?php echo @$res['address'];?>" class="form-control">
+		<label class="mt-3">GYM TYPE</label>
+		<input type="text" name="type" value="<?php echo @$res['type'];?>" class="form-control">
+		<button class="btn btn-dark mt-3" type="submit" name="gym">UPDATE</button>
+	</form>
+</div>
+
+
+UPDATE MEMBER:
+<?php
+require('db.php');
+if (isset($_REQUEST['member'])) {
+  $mem_id = mysqli_real_escape_string($conn, $_REQUEST['id']);
+  $name = mysqli_real_escape_string($conn, $_REQUEST['name']);
+  $age = mysqli_real_escape_string($conn, $_REQUEST['age']);
+  $dob = mysqli_real_escape_string($conn, $_REQUEST['dob']);
+   $package = mysqli_real_escape_string($conn, $_REQUEST['package']);
+  $mobileno = mysqli_real_escape_string($conn, $_REQUEST['mobileno']);
+   $update_query="update member set mem_id='$mem_id',name='$name',age='$age',dob='$dob',package='$package',mobileno='$mobileno' where mem_id='".$_GET['id']."'";
+  $update_sql=mysqli_query($conn,$update_query);
+  $err="<div class='alert alert-success'><b>Member Area Details updated</b></div>";
+}
+$con=mysqli_query($conn,"select * from member where mem_id='".$_GET['id']."'");
+$res=mysqli_fetch_assoc($con);  
+?>
+<div class="container">
+	<form class="form-group mt-3" method="post" action="">
+		<div><h3>UPDATE MEMBER</h3></div>
+		 <?php  
+    echo @$err;
+    ?>
+		<label class="mt-3">MEMBER ID</label>
+		<input type="text" name="id" value="<?php echo @$res['mem_id'];?>" class="form-control">
+		<label class="mt-3">MEMBER NAME</label>
+		<input type="text" name="name" value="<?php echo @$res['name'];?>" class="form-control">
+		<label class="mt-3">AGE</label>
+		<input type="text" name="age" value="<?php echo @$res['age'];?>" class="form-control">
+		<label class="mt-3">DOB</label>
+		<input type="text" name="dob" value="<?php echo @$res['dob'];?>" class="form-control">
+		<label class="mt-3">PACKAGE</label>
+		<input type="text" name="package" value="<?php echo @$res['package'];?>" class="form-control">
+		<label class="mt-3">MOBILE NO</label>
+		<input type="text" name="mobileno" value="<?php echo @$res['mobileno'];?>" class="form-control">
+		<button class="btn btn-dark mt-3" type="submit" name="member">UPDATE</button>
+	</form>
+</div>
+
+UPDATE TRAINER:
+<?php
+require('db.php');
+if (isset($_REQUEST['trainer'])) {
+  $trainer_id = mysqli_real_escape_string($conn, $_REQUEST['id']);
+  $name = mysqli_real_escape_string($conn, $_REQUEST['name']);
+  $time = mysqli_real_escape_string($conn, $_REQUEST['time']);
+  $mobileno = mysqli_real_escape_string($conn, $_REQUEST['mobileno']);
+  $update_query="update trainer set trainer_id='$trainer_id',name='$name',time='$time',mobileno='$mobileno' where trainer_id='".$_GET['id']."'";
+  $update_sql=mysqli_query($conn,$update_query);
+  $err="<div class='alert alert-success'><b>Trainer Details updated</b></div>";
+}
+$con=mysqli_query($conn,"select * from trainer where trainer_id='".$_GET['id']."'");
+$res=mysqli_fetch_assoc($con);  
+?>
+<div class="container">
+	<form class="mt-3 form-group" method="post" action="">
+		<h3>UPDATE TRAINER</h3>
+		 <?php 
+    echo @$err;
+    ?>
+		<label class="mt-3">TRAINER ID</label>
+		<input type="text" name="id" value="<?php echo @$res['trainer_id'];?>" class="form-control">
+		<label class="mt-3">TRAINER NAME</label>
+		<input type="text" name="name" value="<?php echo @$res['name'];?>" class="form-control">
+		<label class="mt-3">TIME</label>
+		<input type="text" name="time" value="<?php echo @$res['time'];?>" class="form-control">
+		<label class="mt-3">MOBILE NO</label>
+		<input type="text" name="mobileno" value="<?php echo @$res['mobileno'];?>" class="form-control">
+		<button class="btn btn-dark mt-3" type="submit" name="trainer">UPDATE</button>
+	</form>
+</div>
+
+UPDATE PAYMENT:
+<?php
+require('db.php');
+if (isset($_REQUEST['payment'])) {
+  $pay_id = mysqli_real_escape_string($conn, $_REQUEST['id']);
+  $amount = mysqli_real_escape_string($conn, $_REQUEST['amount']);
+  $update_query="update payment set pay_id='$pay_id',amount='$amount' where pay_id='".$_GET['id']."'";
+  $update_sql=mysqli_query($conn,$update_query);
+  $err="<div class='alert alert-success'><b>Payment Area Details updated</b></div>";
+}
+$con=mysqli_query($conn,"select * from payment where pay_id='".$_GET['id']."'");
+$res=mysqli_fetch_assoc($con);  
+?>
+<div class="container">
+	<form class="mt-3 form-group" method="post" action="">
+		<h3>UPDATE PAYMENT AREA</h3>
+		 <?php 
+    echo @$err;
+    ?>
+		<label class="mt-3">PAYMENT AREA ID</label>
+		<input type="text" name="id" value="<?php echo @$res['pay_id'];?>" class="form-control">
+		<label class="mt-3">AMOUNT</label>
+		<input type="text" name="amount" value="<?php echo @$res['amount'];?>" class="form-control">
+		<button class="btn btn-dark mt-3" type="submit" name="payment">UPDATE</button>
+	</form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
